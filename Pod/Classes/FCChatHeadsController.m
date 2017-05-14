@@ -20,7 +20,6 @@
 #import "FCPopOverView.h"
 #import "FCSinkView.h"
 
-
 static FCChatHeadsController *_chatHeadsController;
 
 @interface FCChatHeadsController() <CMPopTipViewDelegate>
@@ -89,6 +88,17 @@ static FCChatHeadsController *_chatHeadsController;
     self.chatHeads = [NSMutableArray array];
     _activeChatHeadFrameInStack = DEFAULT_CHAT_HEAD_FRAME;
     self.chatHeadsMoving = NO;
+    self.popoverBubbleRect = CGRectZero;
+}
+
+- (void)setChatHeadStartFrameX:(CGFloat)chatHeadStartFrameX
+{
+    _activeChatHeadFrameInStack.origin.x = chatHeadStartFrameX;
+}
+
+- (void)setChatHeadStartFrameY:(CGFloat)chatHeadStartFrameY
+{
+    _activeChatHeadFrameInStack.origin.y = chatHeadStartFrameY;
 }
 
 #pragma mark -
@@ -494,7 +504,7 @@ static FCChatHeadsController *_chatHeadsController;
             
             if (animated)
             {
-                [UIView animateWithDuration:0.357f
+                [UIView animateWithDuration:kPopoverDisplayAnimationDuration
                                  animations:^{
                                      [chatHead setFrame:frame];
                                  }
@@ -927,11 +937,14 @@ static FCChatHeadsController *_chatHeadsController;
         self.popoverView = [[FCPopOverView alloc] initWithCustomView:contentView];
         
         self.popoverView.pointerSize = 8.0;
-        self.popoverView.sidePadding = 0.0;
-        self.popoverView.topMargin = 0.0;
-        self.popoverView.cornerRadius = 0.0;
+        if (!CGRectIsNull(self.popoverBubbleRect)) {
+            self.popoverView.fixedBubbleRect = self.popoverBubbleRect;
+        }
+        self.popoverView.sidePadding = self.popoverSidePadding ?: 0.0;
+        self.popoverView.topMargin = self.popoverTopMargin ?: 0.0;
+        self.popoverView.cornerRadius = self.popoverCornerRadius ?: 0.0;
         self.popoverView.delegate = self;
-        self.popoverView.backgroundColor = [UIColor whiteColor];
+        self.popoverView.backgroundColor = self.popoverBackgroundColor ?: [UIColor whiteColor];
         self.popoverView.has3DStyle = NO;
         self.popoverView.animation = CMPopTipAnimationSlide;
         self.popoverView.hasGradientBackground = NO;
@@ -940,6 +953,9 @@ static FCChatHeadsController *_chatHeadsController;
         self.popoverView.borderWidth = 0.0f;
         self.popoverView.preferredPointDirection = PointDirectionUp;
         [self.popoverView presentPointingAtView:self.activeChatHead inView:self.headSuperView animated:NO];
+        if (!CGRectIsNull(self.popoverOriginRect)) {
+            self.popoverView.frame = self.popoverOriginRect;
+        }
         
         if (self.delegate && [self.delegate respondsToSelector:@selector(chatHeadsControllerDidDisplayChatView:)])
         {

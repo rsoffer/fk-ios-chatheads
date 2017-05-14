@@ -15,6 +15,10 @@
 
 #import <CMPopTipView/CMPopTipView.h>
 
+#define kPopoverDisplayAnimationDuration 0.2f
+
 @interface FCPopOverView : CMPopTipView
+
+@property(nonatomic,assign) CGRect fixedBubbleRect;
 
 @end

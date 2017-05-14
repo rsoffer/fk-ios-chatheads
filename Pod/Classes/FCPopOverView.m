@@ -18,7 +18,23 @@
 
 @implementation FCPopOverView
 
-- (CGRect)bubbleFrame {
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.layer.opacity = 0.f;
+    
+    [UIView animateWithDuration:kPopoverDisplayAnimationDuration animations:^{
+        self.layer.opacity = 1.f;
+    }];
+}
+
+- (CGRect)bubbleFrame
+{
+    if (!CGRectIsNull(self.fixedBubbleRect)) {
+        return self.fixedBubbleRect;
+    }
+    
     CGRect bubbleFrame = CGRectMake(0,
                                     self.pointerSize,
                                     [[UIScreen mainScreen] bounds].size.width,
