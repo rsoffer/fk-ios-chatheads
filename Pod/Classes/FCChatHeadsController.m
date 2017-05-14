@@ -1422,7 +1422,10 @@ static FCChatHeadsController *_chatHeadsController;
     if (self.isExpanded)
     {
         if (chatHead == self.activeChatHead)
+        {
             [self dismissPopover];
+            [self removeBackgroundView:YES];
+        }
         
         NSUInteger activeIndentation = chatHead.indentationLevel;
         
