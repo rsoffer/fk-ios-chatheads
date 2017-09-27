@@ -39,6 +39,7 @@
 @property (nonatomic, assign) CGFloat chatHeadStartFrameX;
 @property (nonatomic, assign) CGFloat chatHeadStartFrameY;
 
+
 /**
  @brief @b optional view to be used as container for chat heads
  @discussion By default system uses the main window of applicaiton as container for chat heads. 
@@ -124,6 +125,8 @@
  @param animated param indicating whether the dismissal should be animated
  */
 - (void)dismissAllChatHeads:(BOOL)animated;
+
+- (void)moveActiveChatHeadToLocation:(CGPoint)location;
 
 @end
 
