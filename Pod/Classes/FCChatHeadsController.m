@@ -1450,11 +1450,8 @@ static FCChatHeadsController *_chatHeadsController;
 
 - (void)moveActiveChatHeadToLocation:(CGPoint)location
 {
-    [self setChatHeadStartFrameX:location.x];
-    [self setChatHeadStartFrameY:location.y];
-    CGRect frame = [self frameForNewChatHead];
-    self.activeChatHead.frame = frame;
-    _activeChatHeadFrameInStack = frame;
+    _activeChatHeadFrameInStack.origin = location;
+    self.activeChatHead.frame = _activeChatHeadFrameInStack;
 }
 
 @end
